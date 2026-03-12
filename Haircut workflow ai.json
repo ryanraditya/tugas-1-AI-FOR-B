@@ -1,0 +1,116 @@
+{
+  "name": "Haircut workflow ai",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo 101 AI saya akan membatu kamu memilih tipe haircut yang ingin kamu pilih sesuai kriteria jenis rambut dan bentuk wajah kamu.\n\nSaya bisa membantu menentukan model potongan rambut yang cocok berdasarkan:\n• bentuk wajah\n• jenis rambut\n\nSilakan ceritakan bentuk wajah dan jenis rambutmu.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e6db4b17-e5f1-45f9-8c83-7a1b1b334298",
+      "name": "When chat message received",
+      "webhookId": "f8e78f5a-0341-4128-ab8b-e6c9b9074e5b"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu adalah AI Haircut Advisor yang membantu pengguna menentukan model potongan rambut yang cocok.\nBerikan rekomendasi haircut berdasarkan bentuk wajah dan jenis rambut.\nJika pengguna tidak menyebutkan bentuk wajah atau jenis rambut, tanyakan terlebih dahulu sebelum memberikan rekomendasi.\nGunakan bahasa Indonesia yang ramah, santai, dan mudah dipahami."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "dec3945e-a5bf-4ed1-8822-1b25f5f7e6dc",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "5b29a8cf-970a-4381-a17b-39c7580d8fef",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "5z9nByXQibPtTGVH",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "f31ab5f5-aa7f-475c-9fa8-8e8f4d96b87a",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "15362f64-cb70-4174-bb88-ffe2bdd42bdb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "052eef2595aae1e676007986d39442b8794ef3c32cc8a7c2025a8e4a9f32669f"
+  },
+  "id": "EvJkLcoobQI7PSvo",
+  "tags": []
+}
